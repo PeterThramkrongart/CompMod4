@@ -1,0 +1,221 @@
+---
+title: "Assignment 4 - Applying meta-analytic priors"
+author: "Riccardo Fusaroli"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assignment 4
+
+In this assignment we do the following:
+- we run a Bayesian meta-analysis of pitch variability in ASD, based on previously published literature
+- we analyze pitch variability in ASD in two new studies using both a conservative and a meta-analytic prior
+- we assess the difference in model quality and estimates using the two priors.
+
+The questions you need to answer are: What are the consequences of using a meta-analytic prior? Evaluate the models with conservative and meta-analytic priors. Discuss the effects on estimates. Discuss the effects on model quality. Discuss the role that meta-analytic priors should have in scientific practice. Should we systematically use them? Do they have drawbacks? Should we use them to complement more conservative approaches? How does the use of meta-analytic priors you suggest reflect the skeptical and cumulative nature of science?
+
+### Step by step suggestions
+
+Step 1: Perform a meta-analysis of pitch variability from previous studies of voice in ASD
+- the data is available as Ass4_MetaAnalysisData.tsv
+- You should calculate Effect size (cohen's d) and Standard Error (uncertainty in the Cohen's d) per each study, using escalc() from the metafor package (also check the livecoding intro)
+- N.B. we're only interested in getting a meta-analytic effect size for the meta-analytic prior (and not e.g. all the stuff on publication bias). See a brms tutorial here: https://vuorre.netlify.com/post/2016/09/29/meta-analysis-is-a-special-case-of-bayesian-multilevel-modeling/ The formula is EffectSize | se(StandardError) ~ 1 + (1 | Paper). Don't forget prior definition, model checking, etc.
+- Write down the results of the meta-analysis in terms of a prior for step 2.
+
+```{r, Meta-analysis}
+
+#load data and packages
+
+pacman::p_load(pacman, tidyverse, brms,psych,metafor, parallel)
+
+cores = detectCores()
+
+dataMetaAnalysis <- read_delim("Ass4_MetaAnalysisData.tsv", 
+    "\t")
+
+dataMetaAnalysis <- dataMetaAnalysis %>% 
+  mutate_at(c("PitchVariabilityASD_Mean","PitchVariabilityASD_SD","PitchVariabilityTD_Mean","PitchVariabilityTD_SD"),as.numeric)
+
+describe(dataMetaAnalysis)
+
+head(dataMetaAnalysis)
+
+#removing papers without titles
+dataMetaAnalysis <- dataMetaAnalysis %>% subset(!is.na(Paper))
+
+
+#creating yi and vi for MA
+dataMetaAnalysis <- escalc(
+  measure = "SMD",
+  n1i = TD_N,
+  n2i = ASD_N,
+  m1i = PitchVariabilityTD_Mean,
+  m2i = PitchVariabilityASD_Mean,
+  sd1i = PitchVariabilityTD_SD,
+  sd2i = PitchVariabilityASD_SD,
+  data = dataMetaAnalysis,
+  slab = Paper
+) 
+
+dataMetaAnalysis <- dataMetaAnalysis %>%
+  mutate(StandardError = sqrt(vi)) %>% 
+           rename(EffectSize = yi)
+
+summary(dataMetaAnalysis$EffectSize)
+
+summary(dataMetaAnalysis$StandardError) 
+
+metaFormula <- bf(EffectSize | se (StandardError) ~ 1+ (1|Population))
+
+get_prior(metaFormula, data = dataMetaAnalysis, family = gaussian())
+
+#I Think this is a skeptial prior, but I'm not sure...
+
+sd(dataMetaAnalysis$EffectSize, na.rm = T)#0.5
+ 
+
+MA_Prior <- c(
+  prior(normal(0,1),class = Intercept),
+  prior(normal(0,.25 ),class = sd ))
+  
+MA_m0 <- brm(
+  metaFormula,
+  data = dataMetaAnalysis,
+  family = gaussian(),
+  prior = MA_Prior,
+  sample_prior = "only",
+  chains = 2,
+  cores = cores,
+  file = "priorCheckSkeptical"
+)
+ 
+#prior predictive Check
+priorCheck_MA_m0 <- pp_check(MA_m0, nsamples = 100)
+
+priorCheck_MA_m0 + ggtitle(" Prior Check on EffectSize | se (StandardError) ~ 1+ (1|Population)")
+
+
+#fitting model
+MA_m1 <- brm(
+  metaFormula,
+  data = dataMetaAnalysis,
+  family = gaussian(),
+  prior = MA_Prior,
+  sample_prior = T,
+  chains = 2,
+  cores = cores,
+  file = "MA_m1"
+)
+
+#posterior predictive check
+postCheck_MA_m1 <- pp_check(MA_m1, nsamples = 100)
+
+postCheck_MA_m1 + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")
+
+#checking model
+summary(MA_m1) # effect of 0.43 sd = 0.10
+
+analysisMean <- fixef(MA_m1)[[1]]
+analysis_SE <- fixef(MA_m1)[[2]]
+analysisHeterogeneity = 0.31
+
+```
+
+
+Step 2: Analyse pitch variability in ASD in two new studies for which you have access to all the trials (not just study level estimates)
+- the data is available as Ass4_data.csv. Notice there are 2 studies (language us, and language dk), multiple trials per participant, and a few different ways to measure pitch variability (if in doubt, focus on pitch IQR, interquartile range of the log of fundamental frequency)
+- Also, let's standardize the data, so that they are compatible with our meta-analytic prior (Cohen's d is measured in SDs).
+- Is there any structure in the dataset that we should account for with random/varying effects? How would you implement that? Or, if you don't know how to do bayesian random/varying effects or don't want to bother, is there anything we would need to simplify in the dataset?
+
+```{r, step 2... MEGA-ANALYSIS!}
+#loading data
+newData <- read_csv("Ass4_data.csv", col_types = cols(ID = col_character()))
+
+#checking classes
+head(newData)
+lapply(newData,class)
+
+newData <- newData %>% mutate(
+  PitchVariability = scale(Pitch_IQR))
+
+hist(newData$PitchVariability)
+hist(newData$Pitch_IQR)
+hist(newData$PitchVariability)
+
+#lets take a look at the structure of the data
+
+##language only have two levels and it doesn't change, so that is a fixed effect.
+
+##ID people might vary differently, so we will consider that a varying effect
+
+##Verbal IQ may interact with diagnosis and it the data does not look too skewed to cause trouble
+
+ggplot(data = newData, aes(VIQ, color = Diagnosis)) + geom_density() + ggtitle("Distribution of Verbal IQ") + facet_wrap(.~ID)
+
+class(newData$VIQ)
+
+
+```
+
+
+Step 3: Build a regression model predicting Pitch variability from Diagnosis.
+- how is the outcome distributed? (likelihood function). NB. given we are standardizing, and the meta-analysis is on that scale, gaussian is not a bad assumption. Lognormal would require us to convert the prior to that scale.
+- how are the parameters of the likelihood distribution distributed? Which predictors should they be conditioned on? Start simple, with Diagnosis only. Add other predictors only if you have the time and energy!
+- use a skeptical/conservative prior for the effects of diagnosis. Remember you'll need to motivate it.
+- Evaluate model quality. Describe and plot the estimates. 
+
+```{r, MEGA-ANALYSIS pt 2!!!}
+
+#formulas
+newStudies_f0 <- bf(PitchVariability~1+Diagnosis+(1|ID))
+
+newStudies_f1 <- bf(PitchVariability~1+Diagnosis*Language+(1|ID))
+
+get_prior(newStudies_f0,newData,family = gaussian()) 
+
+#skeptical prior
+newStudiesPrior0 <- c(
+  prior(normal(0,.1), class = b),
+  prior(normal(0,.1), class = sd),
+  prior(normal(.5,.3), class = sigma)
+)
+
+
+newStudies_m0_pc <- brm(
+  newStudies_f0,
+  data = newData,
+  family = gaussian(),
+  prior = newStudiesPrior0,
+  sample_prior = "only",
+  chains = 2,
+  cores = cores,
+  file = "priorCheckNewStudies_m0"
+)
+
+get_prior(newStudies_f1,newData,family = gaussian()) 
+
+
+
+```
+
+
+Step 4: Now re-run the model with the meta-analytic prior
+- Evaluate model quality. Describe and plot the estimates. 
+
+Step 5: Compare the models
+- Plot priors and posteriors of the diagnosis effect in both models
+- Compare posteriors between the two models
+- Compare the two models (LOO)
+- Discuss how they compare and whether any of them is best.
+
+Step 6: Prepare a nice write up of the analysis and answer the questions at the top.
+
+Optional step 7: how skeptical should a prior be?
+- Try different levels of skepticism and compare them using LOO.
+
+Optional step 8: Include other predictors
+- Do age, gender and education improve the model?
+- Should they be main effects or interactions?
