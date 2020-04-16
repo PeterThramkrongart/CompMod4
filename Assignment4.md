@@ -165,7 +165,9 @@ metaAnalysis_m0 <- brm(
 priorCheck_metaAnalysis_m0 <-
   pp_check(metaAnalysis_m0, nsamples = 100)
 
-priorCheck_metaAnalysis_m0 + ggtitle(" Prior Check on EffectSize | se (StandardError) ~ 1+ (1|Population)") + theme(plot.title = element_text( size = 10, face = "bold"))
+priorCheck_metaAnalysis_m0 + labs(title = "Prior Check",
+                                  subtitle = "Skeptical Priors",
+                                  caption = "EffectSize | se (StandardError) ~ 1+ (1|Population)")
 ```
 
 ![](Assignment4_files/figure-gfm/Meta-analysis-1.png)<!-- -->
@@ -185,7 +187,9 @@ metaAnalysis_m1 <- brm(
 
 #posterior predictive check
 
-pp_check(metaAnalysis_m1, nsamples = 100) + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")+ theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(metaAnalysis_m1, nsamples = 100) + labs(title = "Posterior Check",
+                                                 subtitle = "Skeptical Priors",
+                                                 caption = "EffectSize | se (StandardError) ~ 1+ (1|Population)") 
 ```
 
 ![](Assignment4_files/figure-gfm/Meta-analysis-2.png)<!-- -->
@@ -252,12 +256,12 @@ hist(newData$PitchVariability)
 
 ``` r
 ASD_DensityPitch <-
-  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability,)) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
 
 TD_DensityPitch <-
-  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability,)) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
 
-ASD_DensityPitch + TD_DensityPitch 
+ASD_DensityPitch + TD_DensityPitch
 ```
 
 ![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-2.png)<!-- -->
@@ -272,11 +276,11 @@ ASD_DensityPitch + TD_DensityPitch
 ##Verbal IQ may interact with diagnosis and it the data does not look too skewed to cause trouble
 
 ASD_Density_VIQ <-
-  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in ASD") + theme(legend.position = "none") + theme(plot.title = element_text( size = 10, face = "bold"))
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in ASD") + theme(legend.position = "none") + theme(plot.title = element_text(size = 10, face = "bold"))
 
 
 TD_Density_VIQ <-
-  ggplot(data = filter(newData, Diagnosis == "TD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in TD") + theme(legend.position = "none") + theme(plot.title = element_text( size = 10, face = "bold"))
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in TD") + theme(legend.position = "none") + theme(plot.title = element_text(size = 10, face = "bold"))
 
 
 
@@ -341,7 +345,9 @@ newStudies_m0_pc <- brm(
   file = "NewStudies_m0Prior"
 )
 
-pp_check(newStudies_m0_pc, nsamples = 100) + ggtitle("prior Check on PitchVariability ~ 1 + Diagnosis + (1 | ID)") + theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(newStudies_m0_pc, nsamples = 100) + labs(title = "Prior Check",
+                                                  subtitle = "Skeptical Priors",
+                                                  caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") 
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-1.png)<!-- -->
@@ -364,16 +370,24 @@ plot(newStudies_m0)
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-2.png)<!-- -->
 
 ``` r
+pp_check(newStudies_m0, nsamples = 100) + labs(title = "Posterior Check",
+                                               subtitle = "Skeptical Priors",
+                                               caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") 
+```
+
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-3.png)<!-- -->
+
+``` r
 # hypothesis testing
 hypo_m0 <-
   plot(hypothesis(newStudies_m0, "DiagnosisTD < 0"), plot = F)
 
 hypo_m0[[1]] + labs(title = "DiagnosisTD < 0",
                     subtitle = "Skeptical Priors",
-                    caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") + theme(strip.text = element_blank()) 
+                    caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") + theme(strip.text = element_blank())
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-3.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-4.png)<!-- -->
 
 ``` r
 hypothesis(newStudies_m0, "DiagnosisTD < 0")
@@ -430,10 +444,12 @@ newStudies_m1_pc <- brm(
   
 )
 
-pp_check(newStudies_m1_pc, nsamples = 100) + ggtitle("PriorCheck on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ") + theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(newStudies_m1_pc, nsamples = 100) + labs(title = "Prior Check",
+                                                  subtitle = "Skeptical Priors",
+                                                  caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ")
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-4.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-5.png)<!-- -->
 
 ``` r
 newStudies_m1 <- brm(
@@ -448,11 +464,14 @@ newStudies_m1 <- brm(
   
 )
 
+
 # posterior predictive check
-pp_check(newStudies_m1, nsamples = 100) + ggtitle("Posterior Check on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ") + theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(newStudies_m1, nsamples = 100) + labs(title = "Posterior Check",
+                                               subtitle = "Skeptical Priors",
+                                               caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)")
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-5.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-6.png)<!-- -->
 
 ``` r
 # hypothesis testing
@@ -464,7 +483,7 @@ hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
                        caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-6.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-7.png)<!-- -->
 
 ``` r
 hypo_m1_us <-
@@ -475,7 +494,7 @@ hypo_m1_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
                        caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-7.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-8.png)<!-- -->
 
 ``` r
 hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0")
@@ -522,7 +541,7 @@ hypo_m1_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:Diagnosi
                           caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-8.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-9.png)<!-- -->
 
 ``` r
 hypothesis(newStudies_m1,
@@ -580,7 +599,7 @@ summary(newStudies_m1)
 conditional_effects(newStudies_m1)
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-9.png)<!-- -->![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-10.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-10.png)<!-- -->![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-11.png)<!-- -->
 
 ``` r
 newStudies_m0 <- add_criterion(newStudies_m0, criterion = "loo")
@@ -647,9 +666,9 @@ newStudiesInformed_m1_pc <- brm(
   file = "newStudiesInformed_m1_pc"
 )
 
-pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
-  "Prior Check on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) with informed priors"
-) + theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(newStudiesInformed_m1_pc, nsamples = 100) + labs(title = "Prior Check",
+                                                          subtitle = "Informed Priors",
+                                                          caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ")
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
@@ -666,32 +685,34 @@ newStudiesInformed_m1 <- brm(
   file = "newStudiesInformed_m"
 )
 
-pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
-  "Posterior Check on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) with informed priors"
-) + theme(plot.title = element_text( size = 10, face = "bold"))
+pp_check(newStudiesInformed_m1, nsamples = 100) + labs(title = "Posterior Check",
+       subtitle = "Informed Priors",
+       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ") 
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
 
 ``` r
 # hypothesis testing
-hypoInformed_dk <- plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"),
-     plot = F)
+hypoInformed_dk <-
+  plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"),
+       plot = F)
 
 hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
-                       subtitle = "Informed Priors",
-                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+                            subtitle = "Informed Priors",
+                            caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
 
 ``` r
-hypoInformed_us <- plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"),
-     plot = F)
+hypoInformed_us <-
+  plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"),
+       plot = F)
 
 hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
-                       subtitle = "Informed Priors",
-                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+                            subtitle = "Informed Priors",
+                            caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-4.png)<!-- -->
@@ -736,8 +757,8 @@ hypoInformed_dk_us <-  plot(
 )
 
 hypoInformed_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD",
-                       subtitle = "Informed Priors",
-                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+                               subtitle = "Informed Priors",
+                               caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-5.png)<!-- -->
@@ -825,7 +846,7 @@ loo_model_weights(newStudies_m1, newStudiesInformed_m1)
     ## newStudiesInformed_m1 0.587
 
 ``` r
-# plot hypotheses 
+# plot hypotheses
 
 hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
                        subtitle = "Skeptical Priors",
@@ -874,8 +895,8 @@ hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0")
 
 ``` r
 hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
-                       subtitle = "Informed Priors",
-                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+                            subtitle = "Informed Priors",
+                            caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
@@ -897,8 +918,8 @@ hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0")
 
 ``` r
 hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
-                       subtitle = "Informed Priors",
-                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+                            subtitle = "Informed Priors",
+                            caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->
