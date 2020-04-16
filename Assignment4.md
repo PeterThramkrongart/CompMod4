@@ -7,20 +7,19 @@ Riccardo Fusaroli
 In this assignment we do the following: - we run a Bayesian
 meta-analysis of pitch variability in ASD, based on previously published
 literature - we analyze pitch variability in ASD in two new studies
-using both a conewStudieservative and a meta-analytic prior - we assess
-the difference in model quality and estimates using the two priors.
+using both a conservative and a meta-analytic prior - we assess the
+difference in model quality and estimates using the two priors.
 
-The questionewStudies you need to anewStudieswer are: What are the
-conewStudiesequences of using a meta-analytic prior? Evaluate the models
-with conewStudieservative and meta-analytic priors. Discuss the effects
-on estimates. Discuss the effects on model quality. Discuss the role
-that meta-analytic priors should have in scientific practice. Should we
-systematically use them? Do they have drawbacks? Should we use them to
-complement more conewStudieservative approaches? How does the use of
-meta-analytic priors you suggest reflect the skeptical and cumulative
-nature of science?
+The questions you need to anwser are: What are the consequences of using
+a meta-analytic prior? Evaluate the models with conservative and
+meta-analytic priors. Discuss the effects on estimates. Discuss the
+effects on model quality. Discuss the role that meta-analytic priors
+should have in scientific practice. Should we systematically use them?
+Do they have drawbacks? Should we use them to complement more
+conservative approaches? How does the use of meta-analytic priors you
+suggest reflect the skeptical and cumulative nature of science?
 
-### Step by step suggestionewStudies
+### Step by step suggestions
 
 Step 1: Perform a meta-analysis of pitch variability from previous
 studies of voice in ASD - the data is available as
@@ -295,9 +294,9 @@ gaussian is not a bad assumption. Lognormal would require us to convert
 the prior to that scale. - how are the parameters of the likelihood
 distribution distributed? Which predictors should they be conditioned
 on? Start simple, with Diagnosis only. Add other predictors only if you
-have the time and energy\! - use a skeptical/conewStudieservative prior
-for the effects of diagnosis. Remember you’ll need to motivate it. -
-Evaluate model quality. Describe and plot the estimates.
+have the time and energy\! - use a skeptical/conservative prior for the
+effects of diagnosis. Remember you’ll need to motivate it. - Evaluate
+model quality. Describe and plot the estimates.
 
 ``` r
 #formulas
@@ -916,13 +915,3 @@ hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0")
     ## '*': For one-sided hypotheses, the posterior probability exceeds 95%;
     ## for two-sided hypotheses, the value tested against lies outside the 95%-CI.
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
-
-Step 6: Prepare a nice write up of the analysis and anewStudieswer the
-questionewStudies at the top.
-
-Optional step 7: how skeptical should a prior be? - Try different levels
-of skepticism and compare them using LOO.
-
-Optional step 8: Include other predictors - Do age, gender and education
-improve the model? - Should they be main effects or
-interactionewStudies?
