@@ -596,10 +596,22 @@ summary(newStudies_m1)
     ## scale reduction factor on split chains (at convergence, Rhat = 1).
 
 ``` r
-conditional_effects(newStudies_m1)
+condEff <- plot(conditional_effects(newStudies_m1),plot = F)
+
+condEff[[1]] + labs(title =  "Effect of Language",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)")
 ```
 
-![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-10.png)<!-- -->![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-11.png)<!-- -->
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-10.png)<!-- -->
+
+``` r
+condEff[[2]] + labs(title =  "Effect of Language:Diagnosis",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)")
+```
+
+![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-11.png)<!-- -->
 
 ``` r
 newStudies_m0 <- add_criterion(newStudies_m0, criterion = "loo")

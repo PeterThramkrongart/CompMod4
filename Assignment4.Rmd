@@ -354,7 +354,16 @@ hypothesis(newStudies_m1,
 summary(newStudies_m1)
 
 
-conditional_effects(newStudies_m1)
+
+condEff <- plot(conditional_effects(newStudies_m1),plot = F)
+
+condEff[[1]] + labs(title =  "Effect of Language",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)")
+
+condEff[[2]] + labs(title =  "Effect of Language:Diagnosis",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)")
 
 newStudies_m0 <- add_criterion(newStudies_m0, criterion = "loo")
 newStudies_m1 <- add_criterion(newStudies_m1, criterion = "loo")
