@@ -252,10 +252,10 @@ hist(newData$PitchVariability)
 
 ``` r
 ASD_DensityPitch <-
-  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none")
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability,)) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
 
 TD_DensityPitch <-
-  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none")
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability,)) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none") + theme(plot.title = element_text(color = "red", size = 10, face = "bold"))
 
 ASD_DensityPitch + TD_DensityPitch 
 ```
