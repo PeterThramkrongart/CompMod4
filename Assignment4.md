@@ -38,7 +38,7 @@ of the meta-analysis in terms of a prior for step 2.
 ``` r
 #load data and packages
 
-pacman::p_load(pacman, tidyverse, brms, psych, metafor, parallel)
+pacman::p_load(pacman, tidyverse, brms, psych, metafor, parallel, patchwork)
 
 cores = detectCores()
 
@@ -86,353 +86,10 @@ dataMetaAnalysis <- dataMetaAnalysis %>%
     as.numeric
   )
 
-describe(dataMetaAnalysis)
-```
+#describe(dataMetaAnalysis)
 
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
-    
-    ## Warning in describe(dataMetaAnalysis): NAs introduced by coercion
+#head(dataMetaAnalysis)
 
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to min; returning Inf
-
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-    
-    ## Warning in FUN(newX[, i], ...): no non-missing arguments to max; returning -Inf
-
-    ##                           vars  n    mean      sd  median trimmed    mad
-    ## Paper*                       1 41     NaN      NA      NA     NaN     NA
-    ## Author*                      2 41     NaN      NA      NA     NaN     NA
-    ## Year                         3 41 2011.37    6.66 2013.00 2012.61   4.45
-    ## Population*                  4 41     NaN      NA      NA     NaN     NA
-    ## DiagnosisDetails*            5 41     NaN      NA      NA     NaN     NA
-    ## Language*                    6 41     NaN      NA      NA     NaN     NA
-    ## Language2*                   7 41     NaN      NA      NA     NaN     NA
-    ## Task*                        8 41     NaN      NA      NA     NaN     NA
-    ## Task2*                       9 41     NaN      NA      NA     NaN     NA
-    ## ASD_N                       10 41   20.66   15.53   15.00   17.55   7.41
-    ## TD_N                        11 41   19.66   16.31   17.00   16.79   7.41
-    ## GenderMaleASD               12 38   16.03   11.21   13.00   14.19   4.45
-    ## GenderMaleTD                13 37   12.19    6.72   10.00   11.45   5.93
-    ## AgeASD_Mean                 14 40  171.43  132.66  131.63  154.72  51.86
-    ## AgeASD_SD                   15 35   42.70   78.27   18.96   25.12  19.04
-    ## AgeTD_Mean                  16 39  166.69  132.91  130.54  150.47  55.66
-    ## AgeTD_SD                    17 34   30.66   34.41   23.93   23.90  18.32
-    ## IndividualData              18 41    0.34    0.48    0.00    0.30   0.00
-    ## PitchMean_Units*            19 25     NaN      NA      NA     NaN     NA
-    ## PitchMeanASD_Mean           20 25  226.48   88.77  225.43  226.43  84.33
-    ## PitchMeanASD_SD             21 25   41.99   24.72   36.13   39.20  17.65
-    ## PitchMeanTD_Mean            22 25  209.59   83.75  207.84  208.02  77.12
-    ## PitchMeanTD_SD              23 25   31.54   17.01   30.41   30.37  14.22
-    ## PitchMeanASDvsTD*           24 18     NaN      NA      NA     NaN     NA
-    ## PitchRange_Units*           25 14     NaN      NA      NA     NaN     NA
-    ## PitchRangeASD_Mean          26 24  196.25  170.54  179.59  178.03 115.18
-    ## PitchRangeASD_SD            27 23   58.98   61.13   46.98   48.56  24.98
-    ## PitchRangeTD_Mean           28 24  168.82  160.54  128.51  147.30 142.22
-    ## PitchRangeTD_SD             29 23   44.14   50.35   37.00   34.01  25.12
-    ## PitchRangeASDvsTD*          30 19     NaN      NA      NA     NaN     NA
-    ## PitchSD_Units*              31  7     NaN      NA      NA     NaN     NA
-    ## PitchSDASD_Mean             32 19   49.30   24.82   49.57   48.96  18.26
-    ## PitchSDASD_SD               33 19   22.06   23.59   12.32   18.99   6.61
-    ## PitchSDTD_Mean              34 19   42.71   23.09   41.69   42.17  24.78
-    ## PitchSDTD_SD                35 19   16.46   17.71   12.49   13.71   9.28
-    ## PitchSDASDvsTD*             36 11     NaN      NA      NA     NaN     NA
-    ## PitchVariability_Units*     37 14     NaN      NA      NA     NaN     NA
-    ## PitchVariabilityASD_Mean    38 31  161.07  163.61  135.43  131.57 135.66
-    ## PitchVariabilityASD_SD      39 30   48.03   57.04   35.20   35.88  37.01
-    ## PitchVariabilityTD_Mean     40 31  138.95  151.65  108.64  109.47 128.22
-    ## PitchVariabilityTD_SD       41 30   37.36   45.91   27.04   28.45  29.40
-    ## PitchVariabilityASDvsTD*    42 19     NaN      NA      NA     NaN     NA
-    ## IntensityMean_Units*        43  6     NaN      NA      NA     NaN     NA
-    ## IntensityMeanASD_Mean       44 15   64.74    9.23   66.28   65.12   8.85
-    ## IntensityMeanASD_SD         45 15    4.51    3.31    3.32    4.13   1.70
-    ## IntensityMeanTD_Mean        46 15   65.03    5.95   64.90   65.10   7.81
-    ## IntensityMeanTD_SD          47 15    4.51    2.40    4.31    4.36   2.30
-    ## IntensityMeanASDvsTD*       48  8     NaN      NA      NA     NaN     NA
-    ## UtteranceDurationUnit*      49  5     NaN      NA      NA     NaN     NA
-    ## UtteranceDurationASD_Mean   50 18  145.37  330.48   30.51   85.87  35.01
-    ## UtteranceDurationASD_SD     51 17   43.77   76.82   11.78   31.24  17.27
-    ## UtteranceDurationTD_Mean    52 18  133.86  305.78   25.29   80.26  28.62
-    ## UtteranceDurationTD_SD      53 17   22.47   38.03    9.49   16.75  12.60
-    ## UtteranceDurationASDvsTD*   54 13     NaN      NA      NA     NaN     NA
-    ## SyllableDurationASD_Mean    55 10    0.32    0.21    0.26    0.27   0.04
-    ## SyllableDurationASD_SD      56 10    0.07    0.05    0.05    0.06   0.04
-    ## SyllableDurationTD_Mean     57 10    0.32    0.17    0.24    0.28   0.04
-    ## SyllableDurationTD_SD       58 10    0.06    0.06    0.04    0.04   0.04
-    ## SyllableDurationASDvsTD*    59  2     NaN      NA      NA     NaN     NA
-    ## SpeechRate_Units*           60  4     NaN      NA      NA     NaN     NA
-    ## SpeechRateASD_Mean          61 13   34.12   69.65    3.66   21.25   0.47
-    ## SpeechRateASD_SD            62 12    8.32   17.97    0.76    4.62   0.26
-    ## SpeechRateTD_Mean           63 13   32.43   65.24    3.88   19.52   0.45
-    ## SpeechRateTD_SD             64 12    8.86   19.53    0.51    4.91   0.24
-    ## SpeechRateASDvsTD*          65  5     NaN      NA      NA     NaN     NA
-    ## PauseLengthASD_Mean         66  9   26.42   36.51    1.48   26.42   1.27
-    ## PauseLengthASD_SD           67  9    9.81   14.47    0.58    9.81   0.43
-    ## PauseLengthTD_Mean          68  9   22.37   32.76    1.13   22.37   0.87
-    ## PauseLengthTD_SD            69  9    2.64    4.16    0.40    2.64   0.46
-    ## PauseLengthASDvsTD*         70  1     NaN      NA      NA     NaN     NA
-    ## PauseNumberASD              71  9  656.90 1854.16   11.23  656.90   9.13
-    ## PauseNumberASD_SD           72  9  146.70  361.45    8.30  146.70   6.59
-    ## PauseNumberTD               73  9  687.25 1982.32    9.92  687.25   7.50
-    ## PauseNumberTD_SD            74  9  134.06  353.85    5.01  134.06   2.90
-    ## PauseNumberASDvsTD*         75  1     NaN      NA      NA     NaN     NA
-    ##                               min     max   range  skew kurtosis     se
-    ## Paper*                        Inf    -Inf    -Inf    NA       NA     NA
-    ## Author*                       Inf    -Inf    -Inf    NA       NA     NA
-    ## Year                      1982.00 2018.00   36.00 -2.64     8.05   1.04
-    ## Population*                   Inf    -Inf    -Inf    NA       NA     NA
-    ## DiagnosisDetails*             Inf    -Inf    -Inf    NA       NA     NA
-    ## Language*                     Inf    -Inf    -Inf    NA       NA     NA
-    ## Language2*                    Inf    -Inf    -Inf    NA       NA     NA
-    ## Task*                         Inf    -Inf    -Inf    NA       NA     NA
-    ## Task2*                        Inf    -Inf    -Inf    NA       NA     NA
-    ## ASD_N                        4.00   77.00   73.00  1.96     3.61   2.43
-    ## TD_N                         4.00  106.00  102.00  3.68    16.43   2.55
-    ## GenderMaleASD                4.00   50.00   46.00  1.70     2.41   1.82
-    ## GenderMaleTD                 3.00   31.00   28.00  1.00     0.52   1.10
-    ## AgeASD_Mean                  4.38  551.29  546.91  1.24     0.99  20.97
-    ## AgeASD_SD                    0.85  431.99  431.14  3.70    14.85  13.23
-    ## AgeTD_Mean                   3.71  591.53  587.82  1.61     2.83  21.28
-    ## AgeTD_SD                     0.47  145.91  145.44  1.98     3.52   5.90
-    ## IndividualData               0.00    1.00    1.00  0.64    -1.62   0.07
-    ## PitchMean_Units*              Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchMeanASD_Mean            8.02  393.61  385.59  0.04     0.05  17.75
-    ## PitchMeanASD_SD              0.24  107.19  106.95  1.08     0.89   4.94
-    ## PitchMeanTD_Mean             8.01  377.08  369.07  0.11     0.06  16.75
-    ## PitchMeanTD_SD               0.10   78.89   78.79  0.71     0.78   3.40
-    ## PitchMeanASDvsTD*             Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchRange_Units*             Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchRangeASD_Mean           1.83  586.07  584.24  0.95     0.19  34.81
-    ## PitchRangeASD_SD             0.09  252.61  252.52  1.65     2.43  12.75
-    ## PitchRangeTD_Mean            1.47  562.39  560.92  1.11     0.47  32.77
-    ## PitchRangeTD_SD              0.00  216.85  216.85  2.02     4.10  10.50
-    ## PitchRangeASDvsTD*            Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchSD_Units*                Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchSDASD_Mean              0.48  103.78  103.30  0.49     0.16   5.69
-    ## PitchSDASD_SD                0.16   96.14   95.98  1.82     2.67   5.41
-    ## PitchSDTD_Mean               0.36   94.24   93.88  0.46    -0.35   5.30
-    ## PitchSDTD_SD                 0.18   79.42   79.24  2.31     5.57   4.06
-    ## PitchSDASDvsTD*               Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchVariability_Units*       Inf    -Inf    -Inf    NA       NA     NA
-    ## PitchVariabilityASD_Mean     0.48  586.07  585.59  1.26     0.94  29.38
-    ## PitchVariabilityASD_SD       0.09  252.61  252.52  1.99     3.93  10.41
-    ## PitchVariabilityTD_Mean      0.36  562.39  562.03  1.44     1.43  27.24
-    ## PitchVariabilityTD_SD        0.00  216.85  216.85  2.39     6.22   8.38
-    ## PitchVariabilityASDvsTD*      Inf    -Inf    -Inf    NA       NA     NA
-    ## IntensityMean_Units*          Inf    -Inf    -Inf    NA       NA     NA
-    ## IntensityMeanASD_Mean       47.41   77.13   29.72 -0.59    -0.87   2.38
-    ## IntensityMeanASD_SD          1.29   12.63   11.33  1.32     0.51   0.86
-    ## IntensityMeanTD_Mean        54.11   75.12   21.01 -0.03    -1.18   1.54
-    ## IntensityMeanTD_SD           1.45    9.48    8.03  0.53    -0.79   0.62
-    ## IntensityMeanASDvsTD*         Inf    -Inf    -Inf    NA       NA     NA
-    ## UtteranceDurationUnit*        Inf    -Inf    -Inf    NA       NA     NA
-    ## UtteranceDurationASD_Mean    0.40 1242.44 1242.04  2.40     4.57  77.90
-    ## UtteranceDurationASD_SD      0.00  275.60  275.60  1.89     2.46  18.63
-    ## UtteranceDurationTD_Mean     0.38 1124.98 1124.61  2.35     4.19  72.07
-    ## UtteranceDurationTD_SD       0.00  130.78  130.77  1.85     2.06   9.22
-    ## UtteranceDurationASDvsTD*     Inf    -Inf    -Inf    NA       NA     NA
-    ## SyllableDurationASD_Mean     0.21    0.90    0.69  2.16     3.23   0.06
-    ## SyllableDurationASD_SD       0.02    0.17    0.15  0.86    -0.77   0.02
-    ## SyllableDurationTD_Mean      0.21    0.76    0.55  1.73     1.88   0.05
-    ## SyllableDurationTD_SD        0.01    0.20    0.19  1.49     1.24   0.02
-    ## SyllableDurationASDvsTD*      Inf    -Inf    -Inf    NA       NA     NA
-    ## SpeechRate_Units*             Inf    -Inf    -Inf    NA       NA     NA
-    ## SpeechRateASD_Mean           2.83  206.97  204.14  1.71     1.13  19.32
-    ## SpeechRateASD_SD             0.42   53.20   52.78  1.66     1.01   5.19
-    ## SpeechRateTD_Mean            2.66  204.19  201.53  1.77     1.48  18.10
-    ## SpeechRateTD_SD              0.34   56.87   56.53  1.64     0.90   5.64
-    ## SpeechRateASDvsTD*            Inf    -Inf    -Inf    NA       NA     NA
-    ## PauseLengthASD_Mean          0.63   88.90   88.28  0.71    -1.47  12.17
-    ## PauseLengthASD_SD            0.29   40.04   39.75  1.06    -0.54   4.82
-    ## PauseLengthTD_Mean           0.54   91.11   90.57  0.97    -0.65  10.92
-    ## PauseLengthTD_SD             0.00   11.67   11.67  1.15    -0.30   1.39
-    ## PauseLengthASDvsTD*           Inf    -Inf    -Inf    NA       NA     NA
-    ## PauseNumberASD               2.81 5596.88 5594.07  2.07     2.61 618.05
-    ## PauseNumberASD_SD            1.86 1099.25 1097.39  1.99     2.38 120.48
-    ## PauseNumberTD                1.11 5971.88 5970.77  2.07     2.62 660.77
-    ## PauseNumberTD_SD             1.18 1073.35 1072.17  2.04     2.53 117.95
-    ## PauseNumberASDvsTD*           Inf    -Inf    -Inf    NA       NA     NA
-
-``` r
-head(dataMetaAnalysis)
-```
-
-    ## # A tibble: 6 x 75
-    ##   Paper Author  Year Population DiagnosisDetails Language Language2 Task  Task2
-    ##   <chr> <chr>  <dbl> <chr>      <chr>            <chr>    <chr>     <chr> <chr>
-    ## 1 (Sha~ Sharda  2010 A          ASD              English  Hindi-En~ Soci~ Soci~
-    ## 2 (Fil~ Filipe  2014 B          Aspergers        Portugu~ Portugue~ Spon~ Lexi~
-    ## 3 (Fil~ Filipe  2014 B          Aspergers        Portugu~ Portugue~ Spon~ Lexi~
-    ## 4 (Die~ Diehl   2009 C          HFA              English  American~ Spon~ Narr~
-    ## 5 (Die~ Diehl   2009 D          HFA              English  American~ Spon~ Narr~
-    ## 6 (Sch~ Schar~  2011 E          Aspergers        English  American~ Soci~ Soci~
-    ## # ... with 66 more variables: ASD_N <dbl>, TD_N <dbl>, GenderMaleASD <dbl>,
-    ## #   GenderMaleTD <dbl>, AgeASD_Mean <dbl>, AgeASD_SD <dbl>, AgeTD_Mean <dbl>,
-    ## #   AgeTD_SD <dbl>, IndividualData <dbl>, PitchMean_Units <chr>,
-    ## #   PitchMeanASD_Mean <dbl>, PitchMeanASD_SD <dbl>, PitchMeanTD_Mean <dbl>,
-    ## #   PitchMeanTD_SD <dbl>, PitchMeanASDvsTD <chr>, PitchRange_Units <chr>,
-    ## #   PitchRangeASD_Mean <dbl>, PitchRangeASD_SD <dbl>, PitchRangeTD_Mean <dbl>,
-    ## #   PitchRangeTD_SD <dbl>, PitchRangeASDvsTD <chr>, PitchSD_Units <chr>,
-    ## #   PitchSDASD_Mean <dbl>, PitchSDASD_SD <dbl>, PitchSDTD_Mean <dbl>,
-    ## #   PitchSDTD_SD <dbl>, PitchSDASDvsTD <chr>, PitchVariability_Units <chr>,
-    ## #   PitchVariabilityASD_Mean <dbl>, PitchVariabilityASD_SD <dbl>,
-    ## #   PitchVariabilityTD_Mean <dbl>, PitchVariabilityTD_SD <dbl>,
-    ## #   PitchVariabilityASDvsTD <chr>, IntensityMean_Units <chr>,
-    ## #   IntensityMeanASD_Mean <dbl>, IntensityMeanASD_SD <dbl>,
-    ## #   IntensityMeanTD_Mean <dbl>, IntensityMeanTD_SD <dbl>,
-    ## #   IntensityMeanASDvsTD <chr>, UtteranceDurationUnit <chr>,
-    ## #   UtteranceDurationASD_Mean <dbl>, UtteranceDurationASD_SD <dbl>,
-    ## #   UtteranceDurationTD_Mean <dbl>, UtteranceDurationTD_SD <dbl>,
-    ## #   UtteranceDurationASDvsTD <chr>, SyllableDurationASD_Mean <dbl>,
-    ## #   SyllableDurationASD_SD <dbl>, SyllableDurationTD_Mean <dbl>,
-    ## #   SyllableDurationTD_SD <dbl>, SyllableDurationASDvsTD <chr>,
-    ## #   SpeechRate_Units <chr>, SpeechRateASD_Mean <dbl>, SpeechRateASD_SD <dbl>,
-    ## #   SpeechRateTD_Mean <dbl>, SpeechRateTD_SD <dbl>, SpeechRateASDvsTD <chr>,
-    ## #   PauseLengthASD_Mean <dbl>, PauseLengthASD_SD <dbl>,
-    ## #   PauseLengthTD_Mean <dbl>, PauseLengthTD_SD <dbl>, PauseLengthASDvsTD <chr>,
-    ## #   PauseNumberASD <dbl>, PauseNumberASD_SD <dbl>, PauseNumberTD <dbl>,
-    ## #   PauseNumberTD_SD <dbl>, PauseNumberASDvsTD <chr>
-
-``` r
 #removing papers without titles
 dataMetaAnalysis <- dataMetaAnalysis %>% subset(!is.na(Paper))
 
@@ -528,10 +185,8 @@ metaAnalysis_m1 <- brm(
 )
 
 #posterior predictive check
-postCheck_metaAnalysis_m1 <-
-  pp_check(metaAnalysis_m1, nsamples = 100)
 
-postCheck_metaAnalysis_m1 + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")
+pp_check(metaAnalysis_m1, nsamples = 100) + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")
 ```
 
 ![](Assignment4_files/figure-gfm/Meta-analysis-2.png)<!-- -->
@@ -586,107 +241,9 @@ newData <-
   read_csv("Ass4_data.csv", col_types = cols(ID = col_character()))
 
 #checking classes
-head(newData)
-```
+#head(newData)
+#lapply(newData, class)
 
-    ## # A tibble: 6 x 26
-    ##   ID    Language npause `speechrate (ns~ Duration Pitch_Mean Pitch_Median
-    ##   <chr> <chr>     <dbl>            <dbl>    <dbl>      <dbl>        <dbl>
-    ## 1 919   us           20             2.68     29.4       5.48         5.45
-    ## 2 919   us           10             3.46     22.9       5.57         5.54
-    ## 3 919   us           19             3.12     25.4       5.49         5.46
-    ## 4 919   us           17             2.99     28.4       5.56         5.54
-    ## 5 100   dk           16             3.97     33         5.63         5.58
-    ## 6 100   dk           13             2.83     29.3       5.58         5.54
-    ## # ... with 19 more variables: Pitch_SD <dbl>, Pitch_IQR <dbl>, Pitch_MAD <dbl>,
-    ## #   F0_Mean <dbl>, F0_Median <dbl>, F0_SD <dbl>, F0_IQR <dbl>, Diagnosis <chr>,
-    ## #   Gender <chr>, Age <dbl>, AdosCommunication <chr>, AdosSocial <chr>,
-    ## #   AdosCreativity <chr>, AdosStereotyped <chr>, VIQ <dbl>, PIQ <dbl>,
-    ## #   TIQ <dbl>, language <chr>, AgeS <dbl>
-
-``` r
-lapply(newData, class)
-```
-
-    ## $ID
-    ## [1] "character"
-    ## 
-    ## $Language
-    ## [1] "character"
-    ## 
-    ## $npause
-    ## [1] "numeric"
-    ## 
-    ## $`speechrate (nsyll/dur)`
-    ## [1] "numeric"
-    ## 
-    ## $Duration
-    ## [1] "numeric"
-    ## 
-    ## $Pitch_Mean
-    ## [1] "numeric"
-    ## 
-    ## $Pitch_Median
-    ## [1] "numeric"
-    ## 
-    ## $Pitch_SD
-    ## [1] "numeric"
-    ## 
-    ## $Pitch_IQR
-    ## [1] "numeric"
-    ## 
-    ## $Pitch_MAD
-    ## [1] "numeric"
-    ## 
-    ## $F0_Mean
-    ## [1] "numeric"
-    ## 
-    ## $F0_Median
-    ## [1] "numeric"
-    ## 
-    ## $F0_SD
-    ## [1] "numeric"
-    ## 
-    ## $F0_IQR
-    ## [1] "numeric"
-    ## 
-    ## $Diagnosis
-    ## [1] "character"
-    ## 
-    ## $Gender
-    ## [1] "character"
-    ## 
-    ## $Age
-    ## [1] "numeric"
-    ## 
-    ## $AdosCommunication
-    ## [1] "character"
-    ## 
-    ## $AdosSocial
-    ## [1] "character"
-    ## 
-    ## $AdosCreativity
-    ## [1] "character"
-    ## 
-    ## $AdosStereotyped
-    ## [1] "character"
-    ## 
-    ## $VIQ
-    ## [1] "numeric"
-    ## 
-    ## $PIQ
-    ## [1] "numeric"
-    ## 
-    ## $TIQ
-    ## [1] "numeric"
-    ## 
-    ## $language
-    ## [1] "character"
-    ## 
-    ## $AgeS
-    ## [1] "numeric"
-
-``` r
 newData <- newData %>% mutate(PitchVariability = scale(Pitch_IQR))
 
 hist(newData$PitchVariability)
@@ -695,16 +252,16 @@ hist(newData$PitchVariability)
 ![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-1.png)<!-- -->
 
 ``` r
-hist(newData$Pitch_IQR)
+ASD_DensityPitch <-
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none")
+
+TD_DensityPitch <-
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none")
+
+ASD_DensityPitch + TD_DensityPitch 
 ```
 
 ![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-2.png)<!-- -->
-
-``` r
-hist(newData$PitchVariability)
-```
-
-![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-3.png)<!-- -->
 
 ``` r
 #lets take a look at the structure of the data
@@ -715,19 +272,21 @@ hist(newData$PitchVariability)
 
 ##Verbal IQ may interact with diagnosis and it the data does not look too skewed to cause trouble
 
-ggplot(data = newData, aes(VIQ, color = Diagnosis)) + geom_density() + ggtitle("Distribution of Verbal IQ") + facet_wrap(. ~
-                                                                                                                           ID)
+ASD_Density_VIQ <-
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in ASD") + theme(legend.position = "none")
+
+TD_Density_VIQ <-
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in TD") + theme(legend.position = "none")
+
+
+ASD_Density_VIQ + TD_Density_VIQ
 ```
 
-    ## Warning: Removed 160 rows containing non-finite values (stat_density).
+    ## Warning: Removed 90 rows containing non-finite values (stat_density).
 
-![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-4.png)<!-- -->
+    ## Warning: Removed 70 rows containing non-finite values (stat_density).
 
-``` r
-class(newData$VIQ)
-```
-
-    ## [1] "numeric"
+![](Assignment4_files/figure-gfm/step%202...%20MEGA-ANALYSIS!-3.png)<!-- -->
 
 Step 3: Build a regression model predicting Pitch variability from
 Diagnosis. - how is the outcome distributed? (likelihood function). NB.
@@ -745,9 +304,8 @@ Evaluate model quality. Describe and plot the estimates.
 newStudies_f0 <- bf(PitchVariability ~ 1 + Diagnosis + (1 | ID))
 
 newStudies_f1 <-
-  bf(PitchVariability ~ 0 + Language + Diagnosis:Language + (1 | ID))
-
-
+  bf(PitchVariability ~ 0 + Language + Diagnosis:Language + (1 |
+                                                               ID))
 
 get_prior(newStudies_f0, newData, family = gaussian())
 ```
@@ -782,7 +340,7 @@ newStudies_m0_pc <- brm(
   file = "NewStudies_m0Prior"
 )
 
-pp_check(newStudies_m0_pc, nsamples = 100) + ggtitle("prior Check on PitchVariability ~ 1 + Diagnosis + (1 | ID)  ")
+pp_check(newStudies_m0_pc, nsamples = 100) + ggtitle("prior Check on PitchVariability ~ 1 + Diagnosis + (1 | ID)")
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-1.png)<!-- -->
@@ -806,7 +364,12 @@ plot(newStudies_m0)
 
 ``` r
 # hypothesis testing
-plot(hypothesis(newStudies_m0, "DiagnosisTD < 0"))
+hypo_m0 <-
+  plot(hypothesis(newStudies_m0, "DiagnosisTD < 0"), plot = F)
+
+hypo_m0[[1]] + labs(title = "DiagnosisTD < 0",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-3.png)<!-- -->
@@ -866,7 +429,6 @@ newStudies_m1_pc <- brm(
   
 )
 
-
 pp_check(newStudies_m1_pc, nsamples = 100) + ggtitle("PriorCheck on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ")
 ```
 
@@ -893,13 +455,23 @@ pp_check(newStudies_m1, nsamples = 100) + ggtitle("Posterior Check on PitchVaria
 
 ``` r
 # hypothesis testing
-plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"))
+hypo_m1_dk <-
+  plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"), plot = F)
+
+hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-6.png)<!-- -->
 
 ``` r
-plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"))
+hypo_m1_us <-
+  plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"), plot = F)
+
+hypo_m1_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-7.png)<!-- -->
@@ -935,10 +507,18 @@ hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0")
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
 
 ``` r
-plot(hypothesis(
-  newStudies_m1,
-  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
-))
+hypo_m1_dk_us <- plot(
+  hypothesis(
+    newStudies_m1,
+    "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
+  ),
+  plot = F
+)
+
+
+hypo_m1_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD",
+                          subtitle = "Skeptical Priors",
+                          caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/MEGA-ANALYSIS%20pt%202!!!-8.png)<!-- -->
@@ -1065,13 +645,7 @@ newStudiesInformed_m1_pc <- brm(
   cores = cores,
   file = "newStudiesInformed_m1_pc"
 )
-```
 
-    ## Compiling the C++ model
-
-    ## Start sampling
-
-``` r
 pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
   "Prior Check on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) with informed priors"
 )
@@ -1090,12 +664,7 @@ newStudiesInformed_m1 <- brm(
   cores = cores,
   file = "newStudiesInformed_m"
 )
-```
 
-    ## Compiling the C++ model
-    ## Start sampling
-
-``` r
 pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
   "Posterior Check on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) with informed priors"
 )
@@ -1105,13 +674,23 @@ pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
 
 ``` r
 # hypothesis testing
-plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"))
+hypoInformed_dk <- plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"),
+     plot = F)
+
+hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
 
 ``` r
-plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"))
+hypoInformed_us <- plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"),
+     plot = F)
+
+hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-4.png)<!-- -->
@@ -1147,12 +726,17 @@ hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0")
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
 
 ``` r
-plot(
+hypoInformed_dk_us <-  plot(
   hypothesis(
     newStudiesInformed_m1,
     "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
-  )
+  ),
+  plot = F
 )
+
+hypoInformed_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-1-5.png)<!-- -->
@@ -1216,21 +800,9 @@ newStudiesInformed_m1 <-
                 reloo = T)
 ```
 
-    ## 3 problematic observation(s) found.
-    ## The model will be refit 3 times.
+    ## No problematic observations found. Returning the original 'loo' object.
 
-    ## 
-    ## Fitting model 1 out of 3 (leaving out observation 125)
-
-    ## 
-    ## Fitting model 2 out of 3 (leaving out observation 639)
-
-    ## 
-    ## Fitting model 3 out of 3 (leaving out observation 640)
-
-    ## Start sampling
-    ## Start sampling
-    ## Start sampling
+    ## Automatically saving the model object in 'newStudiesInformed_m.rds'
 
 Step 5: Compare the models - Plot priors and posteriors of the diagnosis
 effect in both models - Compare posteriors between the two models -
@@ -1252,9 +824,11 @@ loo_model_weights(newStudies_m1, newStudiesInformed_m1)
     ## newStudiesInformed_m1 0.587
 
 ``` r
-# plot hypotheses
+# plot hypotheses 
 
-plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"))
+hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
@@ -1275,7 +849,9 @@ hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0")
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
 
 ``` r
-plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"))
+hypo_m1_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
@@ -1296,7 +872,9 @@ hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0")
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
 
 ``` r
-plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"))
+hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
@@ -1317,7 +895,9 @@ hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0")
     ## Posterior probabilities of point hypotheses assume equal prior probabilities.
 
 ``` r
-plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"))
+hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 ```
 
 ![](Assignment4_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->

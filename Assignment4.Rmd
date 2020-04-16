@@ -28,9 +28,10 @@ Step 1: Perform a meta-analysis of pitch variability from previous studies of vo
 ```{r, Meta-analysis}
 
 
+
 #load data and packages
 
-pacman::p_load(pacman, tidyverse, brms, psych, metafor, parallel)
+pacman::p_load(pacman, tidyverse, brms, psych, metafor, parallel, patchwork)
 
 cores = detectCores()
 
@@ -48,9 +49,9 @@ dataMetaAnalysis <- dataMetaAnalysis %>%
     as.numeric
   )
 
-describe(dataMetaAnalysis)
+#describe(dataMetaAnalysis)
 
-head(dataMetaAnalysis)
+#head(dataMetaAnalysis)
 
 #removing papers without titles
 dataMetaAnalysis <- dataMetaAnalysis %>% subset(!is.na(Paper))
@@ -121,10 +122,9 @@ metaAnalysis_m1 <- brm(
 )
 
 #posterior predictive check
-postCheck_metaAnalysis_m1 <-
-  pp_check(metaAnalysis_m1, nsamples = 100)
 
-postCheck_metaAnalysis_m1 + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")
+pp_check(metaAnalysis_m1, nsamples = 100) + ggtitle("Posterior Check on EffectSize | se (StandardError) ~ 1+ (1|Population) ")
+
 
 #checking model
 summary(metaAnalysis_m1) # effect of 0.43 sd = 0.10
@@ -147,14 +147,21 @@ newData <-
   read_csv("Ass4_data.csv", col_types = cols(ID = col_character()))
 
 #checking classes
-head(newData)
-lapply(newData, class)
+#head(newData)
+#lapply(newData, class)
 
 newData <- newData %>% mutate(PitchVariability = scale(Pitch_IQR))
 
 hist(newData$PitchVariability)
-hist(newData$Pitch_IQR)
-hist(newData$PitchVariability)
+
+ASD_DensityPitch <-
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in ASD") + theme(legend.position = "none")
+
+TD_DensityPitch <-
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(PitchVariability, )) + geom_density() + ggtitle("Distribution of Pitch Variability IQ in TD") + theme(legend.position = "none")
+
+ASD_DensityPitch + TD_DensityPitch 
+
 
 #lets take a look at the structure of the data
 
@@ -164,10 +171,15 @@ hist(newData$PitchVariability)
 
 ##Verbal IQ may interact with diagnosis and it the data does not look too skewed to cause trouble
 
-ggplot(data = newData, aes(VIQ, color = Diagnosis)) + geom_density() + ggtitle("Distribution of Verbal IQ") + facet_wrap(. ~
-                                                                                                                           ID)
+ASD_Density_VIQ <-
+  ggplot(data = filter(newData, Diagnosis == "ASD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in ASD") + theme(legend.position = "none")
 
-class(newData$VIQ)
+TD_Density_VIQ <-
+  ggplot(data = filter(newData, Diagnosis == "TD"), aes(VIQ, color = ID)) + geom_density() + ggtitle("Distribution of Verbal IQ in TD") + theme(legend.position = "none")
+
+
+ASD_Density_VIQ + TD_Density_VIQ
+
 
 ```
 
@@ -181,13 +193,13 @@ Step 3: Build a regression model predicting Pitch variability from Diagnosis.
 ```{r, MEGA-ANALYSIS pt 2!!!}
 
 
+
 #formulas
 newStudies_f0 <- bf(PitchVariability ~ 1 + Diagnosis + (1 | ID))
 
 newStudies_f1 <-
-  bf(PitchVariability ~ 0 + Language + Diagnosis:Language + (1 | ID))
-
-
+  bf(PitchVariability ~ 0 + Language + Diagnosis:Language + (1 |
+                                                               ID))
 
 get_prior(newStudies_f0, newData, family = gaussian())
 
@@ -211,7 +223,7 @@ newStudies_m0_pc <- brm(
   file = "NewStudies_m0Prior"
 )
 
-pp_check(newStudies_m0_pc, nsamples = 100) + ggtitle("prior Check on PitchVariability ~ 1 + Diagnosis + (1 | ID)  ")
+pp_check(newStudies_m0_pc, nsamples = 100) + ggtitle("prior Check on PitchVariability ~ 1 + Diagnosis + (1 | ID)")
 
 newStudies_m0 <- brm(
   newStudies_f0,
@@ -228,8 +240,15 @@ plot(newStudies_m0)
 
 
 # hypothesis testing
-plot(hypothesis(newStudies_m0, "DiagnosisTD < 0"))
+hypo_m0 <-
+  plot(hypothesis(newStudies_m0, "DiagnosisTD < 0"), plot = F)
+
+hypo_m0[[1]] + labs(title = "DiagnosisTD < 0",
+                    subtitle = "Skeptical Priors",
+                    caption = "PitchVariability ~ 1 + Diagnosis + (1 | ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudies_m0, "DiagnosisTD < 0")
+
 
 
 #interactionmodel
@@ -259,9 +278,7 @@ newStudies_m1_pc <- brm(
   
 )
 
-
 pp_check(newStudies_m1_pc, nsamples = 100) + ggtitle("PriorCheck on PitchVariability~0 + Language + Diagnosis:Language+(1|ID) ")
-
 
 
 newStudies_m1 <- brm(
@@ -281,16 +298,36 @@ pp_check(newStudies_m1, nsamples = 100) + ggtitle("Posterior Check on PitchVaria
 
 
 # hypothesis testing
-plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"))
-plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"))
+hypo_m1_dk <-
+  plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"), plot = F)
+
+hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
+hypo_m1_us <-
+  plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"), plot = F)
+
+hypo_m1_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 
 hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0")
 hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0")
 
-plot(hypothesis(
-  newStudies_m1,
-  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
-))
+hypo_m1_dk_us <- plot(
+  hypothesis(
+    newStudies_m1,
+    "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
+  ),
+  plot = F
+)
+
+
+hypo_m1_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD",
+                          subtitle = "Skeptical Priors",
+                          caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudies_m1,
            "Languagedk:DiagnosisTD < Languageus:DiagnosisTD")
 
@@ -353,18 +390,35 @@ pp_check(newStudiesInformed_m1_pc, nsamples = 100) + ggtitle(
 )
 
 # hypothesis testing
-plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"))
-plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"))
+hypoInformed_dk <- plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"),
+     plot = F)
+
+hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
+hypoInformed_us <- plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"),
+     plot = F)
+
+hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
 
 hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0")
 hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0")
 
-plot(
+hypoInformed_dk_us <-  plot(
   hypothesis(
     newStudiesInformed_m1,
     "Languagedk:DiagnosisTD < Languageus:DiagnosisTD"
-  )
+  ),
+  plot = F
 )
+
+hypoInformed_dk_us[[1]] + labs(title =  "Languagedk:DiagnosisTD < Languageus:DiagnosisTD",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudiesInformed_m1,
            "Languagedk:DiagnosisTD < Languageus:DiagnosisTD")
 
@@ -374,8 +428,6 @@ newStudiesInformed_m1 <-
   add_criterion(newStudiesInformed_m1,
                 criterion = "loo",
                 reloo = T)
-
-
 
 
 ```
@@ -390,15 +442,30 @@ Step 5: Compare the models
 ```{r}
 loo_model_weights(newStudies_m1, newStudiesInformed_m1)
 
-# plot hypotheses
+# plot hypotheses 
 
-plot(hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0"))
+hypo_m1_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudies_m1, "Languagedk:DiagnosisTD < 0")
-plot(hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0"))
+
+hypo_m1_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Skeptical Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudies_m1, "Languageus:DiagnosisTD < 0")
-plot(hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0"))
+
+hypoInformed_dk[[1]] + labs(title =  "Languagedk:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudiesInformed_m1, "Languagedk:DiagnosisTD < 0")
-plot(hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0"))
+
+hypoInformed_us[[1]] + labs(title =  "Languageus:DiagnosisTD < 0",
+                       subtitle = "Informed Priors",
+                       caption = "PitchVariability~0 + Language + Diagnosis:Language+(1|ID)") + theme(strip.text = element_blank())
+
 hypothesis(newStudiesInformed_m1, "Languageus:DiagnosisTD < 0")
 
 
